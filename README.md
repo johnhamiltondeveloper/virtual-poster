@@ -3,10 +3,12 @@
 ## backend
 
 In the commandline go to the backend folder 
+
 start server ```node app.js```
 
 ## frontend
 In the commandline go to the frontend folder 
+
 start server ```ng serve```
 
 # Deployment
