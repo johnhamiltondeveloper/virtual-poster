@@ -8,7 +8,7 @@
         $("#submit").click(function(){
           email=$("#email").val();
           pass=$("#password").val();
-          $.post("http://localhost:3000/login",{email: email,password: pass}, function(data){
+          $.post("http://localhost:3000/api/login",{email: email,password: pass}, function(data){
             if(data === 'yes') {
                 alert("login success");
               }
