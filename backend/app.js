@@ -35,7 +35,7 @@ connection.connect(function(err) {
 const initializePassport = require('./passport-config')
 const passport = require('passport')
 
-initializePassport(passport,getUserByEmail)
+initializePassport(passport,connection)
 
 app.use(passport.initialize())
 app.use(passport.session())
