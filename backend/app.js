@@ -70,6 +70,8 @@ const { json } = require('express');
 
 app.post('/register', async (req, res) => {
 
+  req.session.loggedin = true;
+
   try {
     const salt = await bcrypt.genSalt()
     const hashedPassword = await bcrypt.hash(req.body.password,salt)
@@ -161,3 +163,29 @@ app.get('/x', (req, res) => {
   
   
 });
+
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
+
+var uuid = require('uuid');
+
+
+// basic cookie system working
+app.get('/api/auth',(req, res) => {
+  res.cookie('key', uuid.v4(), {expire: 360000 + Date.now()}).send('set cookie'); 
+})
+
+app.get('/join',(req,res) => {
+
+  var hasCookie = ('key' in req.cookies)
+
+  if(hasCookie){
+    console.log(req.cookies.key)
+    res.send('key: ' + req.cookies.key)
+  }
+  else {
+    res.send('No cookie set')
+  }
+
+})
