@@ -48,13 +48,6 @@ app.get('/l', (req, res) => {
   res.sendfile("login.html");
 });
 
-app.get('/customer', function (req, res) {
-  connection.query('select * from users', function (err, results, fields) {
-   if (err) throw err;
-   res.end(JSON.stringify(results));
- });
-});
-
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
@@ -76,7 +69,7 @@ app.post('/register', async (req, res) => {
 
     const email = req.body.email
 
-    connection.query("INSERT INTO users (email,password) VALUES (?,?)",[email,hashedPassword], function (err, results, fields) {
+    connection.query("INSERT INTO users (email,password) VALUES (?,?)",[connection.escape(email),connection.escape(hashedPassword)], function (err, results, fields) {
       if (err) throw err;
     });
 
@@ -90,23 +83,27 @@ app.post('/register', async (req, res) => {
 });
 
 // Logout
-app.get('logout',(req, res) => {
-
-  try {
+app.get('/logout',(req, res) => {
 
   var hasCookie = ('key' in req.cookies)
 
-  if(hasCookie){
-    console.log(req.cookies.key)
-    res.send('key: ' + req.cookies.key)
-  }
+  let query = "UPDATE users SET access_token = NULL WHERE access_token = " + connection.escape(req.cookies.key)
 
-  connection.query('select * from users WHERE email=?',[req.body.email], function (err, results, fields) {
-    if (err) throw err;
-  })
-    
-  } catch (error) {
-    
+  if(hasCookie) {
+    try {
+      connection.query(query,[req.cookies.key], function (err, results, fields) {
+        if (err) throw err;
+
+        res.clearCookie('key');
+        res.send('Done')
+      })
+      
+    } 
+    catch (error) { 
+    }
+  }
+  else {
+    res.send('No need')
   }
 
 })
@@ -119,7 +116,7 @@ app.post('/login', async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password,salt)
 
     // querys the database to find a the user 
-    connection.query('select * from users WHERE email=?',[req.body.email], function (err, results, fields) {
+    connection.query("select * from users WHERE email = " + connection.escape(req.body.email), function (err, results, fields) {
       if (err) throw err;
       
       // gets first item in the
@@ -137,7 +134,9 @@ app.post('/login', async (req, res) => {
 
             var user_token = uuid.v4()
 
-            let query = "UPDATE users SET access_token = '" + user_token + "' WHERE email = '" + req.body.email + "'"
+            let query = "UPDATE users SET access_token = " + connection.escape(user_token) + " WHERE email = " + connection.escape(req.body.email)
+
+            console.log(query)
 
             try {
 
@@ -178,52 +177,36 @@ app.post('/login', async (req, res) => {
   
 });
 
-function getUserByEmail(email, callback) {
-
-  connection.query('select * from users WHERE email=?',[email], function (err, results, fields) {
-    if (err) throw err;
-
-    if(results.length == 0)
-    { 
-      callback(null)
-    }
-    else
-    {
-      callback({email: results[0].email,password: results[0].password})
-    }
-
-  })
-  
-}
-
-app.get('/x', (req, res) => {
-  getUserByEmail("admin",function(result){
-    res.send(result)
-  })
-  
-  
-});
-
-
-// basic cookie system working
-app.get('/api/auth',(req, res) => {
-  res.cookie('key', uuid.v4(), {expire: 360000 + Date.now()}).send('set cookie'); 
-})
-
-app.get('/join',(req,res) => {
+var auth = async function(req, res, next) {
 
   var hasCookie = ('key' in req.cookies)
+  var canLogin = false
 
-  if(hasCookie){
-    console.log(req.cookies.key)
-    res.send('key: ' + req.cookies.key)
+  if (hasCookie){
+    try {
+
+      await connection.query('select * from users WHERE access_token=?',[connection.escape(req.cookies.key)], function (err, results, fields) {
+        if(results.length == 1){
+          canLogin = true
+        }
+      })
+
+      console.log(canLogin)
+      
+    } catch (error) {
+      
+    }
   }
-  else {
-    res.send('No cookie set')
-  }
 
-})
-
-var auth = function(req, res, next) {
-
+  if (canLogin)
+    return next();
+  else
+    return res.sendStatus(401);
 }
+
+app.get('/customer', auth ,function (req, res) {
+  connection.query('select * from users', function (err, results, fields) {
+   if (err) throw err;
+   res.end(JSON.stringify(results));
+ });
+});
