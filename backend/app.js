@@ -219,6 +219,6 @@ var auth = async function(req, res, next) {
 app.get('/customer', auth ,function (req, res) {
   connection.query('select * from users', function (err, results, fields) {
    if (err) throw err;
-   res.end(JSON.stringify(results));
+   res.json(results).send();
  });
 });
