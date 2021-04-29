@@ -10,6 +10,12 @@ app.use(express.urlencoded());
 
 const session = require('express-session')
 
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
+
+var uuid = require('uuid');
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -31,15 +37,6 @@ connection.connect(function(err) {
   console.log('You are now connected with mysql database...')
 })
 
-// setup passport auth
-const initializePassport = require('./passport-config')
-const passport = require('passport')
-
-initializePassport(passport,connection)
-
-app.use(passport.initialize())
-app.use(passport.session())
-
 // This is just used for testing perposes ###### Remove
 app.get('/r', (req, res) => {
 
@@ -50,8 +47,6 @@ app.get('/l', (req, res) => {
 
   res.sendfile("login.html");
 });
-
-app.post('/api/login', passport.authenticate ('local', {successRedirect: '/',failureRedirect: '/login'}))
 
 app.get('/customer', function (req, res) {
   connection.query('select * from users', function (err, results, fields) {
@@ -67,6 +62,7 @@ app.listen(port, () => {
 // Password managment
 const bcrypt = require('bcrypt');
 const { json } = require('express');
+const e = require('express');
 
 app.post('/register', async (req, res) => {
 
@@ -93,6 +89,28 @@ app.post('/register', async (req, res) => {
   
 });
 
+// Logout
+app.get('logout',(req, res) => {
+
+  try {
+
+  var hasCookie = ('key' in req.cookies)
+
+  if(hasCookie){
+    console.log(req.cookies.key)
+    res.send('key: ' + req.cookies.key)
+  }
+
+  connection.query('select * from users WHERE email=?',[req.body.email], function (err, results, fields) {
+    if (err) throw err;
+  })
+    
+  } catch (error) {
+    
+  }
+
+})
+
 // login api request
 app.post('/login', async (req, res) => {
 
@@ -114,9 +132,31 @@ app.post('/login', async (req, res) => {
         bcrypt.compare(
         req.body.password, row.password, function(err, result) {
           if (result == true) {
+
             console.log("Password accepted")
-            res.status(202).send()
-          } else {
+
+            var user_token = uuid.v4()
+
+            let query = "UPDATE users SET access_token = '" + user_token + "' WHERE email = '" + req.body.email + "'"
+
+            try {
+
+              connection.query(query, function (error, results, fields) { 
+                if (error) throw error;
+
+                res.cookie('key', user_token, {expire: 360000 + Date.now()});
+                res.status(202).send() 
+              });
+
+              
+            } catch (error) {
+              console.log(error)
+              res.status(500).send() 
+            }
+
+          }
+          else {
+
             console.log("Wrong password")
             res.status(401).send()
           }
@@ -164,12 +204,6 @@ app.get('/x', (req, res) => {
   
 });
 
-const cookieParser = require('cookie-parser');
-
-app.use(cookieParser());
-
-var uuid = require('uuid');
-
 
 // basic cookie system working
 app.get('/api/auth',(req, res) => {
@@ -189,3 +223,7 @@ app.get('/join',(req,res) => {
   }
 
 })
+
+var auth = function(req, res, next) {
+
+}
