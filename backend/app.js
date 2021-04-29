@@ -26,10 +26,10 @@ app.use(session({
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'password',
-  database: 'database',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_DATABASE,
 });
 
 connection.connect(function(err) {
@@ -175,7 +175,7 @@ app.post('/login', async (req, res) => {
   
 });
 
-// authentication middleware chacks if the user can access this resource
+// authentication middleware chacks if the user can access this
 var auth = async function(req, res, next) {
 
   var hasCookie = ('key' in req.cookies)
