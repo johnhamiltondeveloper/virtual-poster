@@ -1,0 +1,15 @@
+GET http://localhost:3000/customer
+
+###
+
+POST http://localhost:3000/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "admin",
+    "password": "admin"
+}
+
+###
+
+GET http://localhost:3000/logout
