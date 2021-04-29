@@ -54,7 +54,7 @@ app.listen(port, () => {
 
 // Password managment
 const bcrypt = require('bcrypt');
-const { json } = require('express');
+const { json, response } = require('express');
 const e = require('express');
 
 app.post('/register', async (req, res) => {
@@ -136,8 +136,6 @@ app.post('/login', async (req, res) => {
 
             let query = "UPDATE users SET access_token = " + connection.escape(user_token) + " WHERE email = " + connection.escape(req.body.email)
 
-            console.log(query)
-
             try {
 
               connection.query(query, function (error, results, fields) { 
@@ -177,31 +175,45 @@ app.post('/login', async (req, res) => {
   
 });
 
+// authentication middleware chacks if the user can access this resource
 var auth = async function(req, res, next) {
 
   var hasCookie = ('key' in req.cookies)
-  var canLogin = false
+
+  const passedAuth = function () {
+    return next();
+  }
+
+  const noauth = function () {
+    return res.sendStatus(401);
+  }
+
+  const tokenCheck = async function() {
+    connection.query("select * from users WHERE access_token= " + connection.escape(req.cookies.key), function (err, results, fields) {
+      if(results.length == 1){
+        passedAuth()
+      }
+      else {
+        noauth()
+      }
+    }
+    )
+  }
 
   if (hasCookie){
     try {
 
-      await connection.query('select * from users WHERE access_token=?',[connection.escape(req.cookies.key)], function (err, results, fields) {
-        if(results.length == 1){
-          canLogin = true
-        }
-      })
-
-      console.log(canLogin)
+      tokenCheck()
       
     } catch (error) {
       
     }
   }
+  else {
+    noauth()
+  }
 
-  if (canLogin)
-    return next();
-  else
-    return res.sendStatus(401);
+
 }
 
 app.get('/customer', auth ,function (req, res) {
