@@ -13,15 +13,23 @@ start server ```node app.js```
 
 ### Setting up datebase
 
-The mysql database will have to be in legacy authentication mode.
+> importent
 
-You will need to change this code to match the details for you database
+The mysql database system will have to be in legacy authentication mode.
+
+
+With in backend folder you need to change the given value below found in the `.env` file to ones used by your mysql database. 
+
+- `DB_HOST=` will need to be the ip of your database
+- `DB_USER` will need to be the user you have setup in the database to be the acees user
+- `DB_PASS` this will be the user password that is used for the mysql user account
+- `DB_DATABASE` will need to be set to the database you are accessing with in the mysql system
 
 ```
-host: '127.0.0.1',
-user: 'root',
-password: 'password',
-database: 'database',
+DB_HOST=127.0.0.1
+DB_USER=root
+DB_PASS=password
+DB_DATABASE=database
 ```
 
 ## frontend
