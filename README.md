@@ -13,6 +13,8 @@ start server ```node app.js```
 
 ### Setting up datebase
 
+The SQL schema can be found in `./virtual-poster/MySQL/database_schema.sql` this is the SQL code that can be used to setup the mysql schema
+
 > importent
 
 The mysql database system will have to be in legacy authentication mode.
@@ -21,9 +23,9 @@ The mysql database system will have to be in legacy authentication mode.
 With in backend folder you need to change the given value below found in the `.env` file to ones used by your mysql database. 
 
 - `DB_HOST=` will need to be the ip of your database
-- `DB_USER` will need to be the user you have setup in the database to be the acees user
-- `DB_PASS` this will be the user password that is used for the mysql user account
-- `DB_DATABASE` will need to be set to the database you are accessing with in the mysql system
+- `DB_USER=` will need to be the user you have setup in the database to be the access user
+- `DB_PASS=` this will be the user password that is used for the mysql user account
+- `DB_DATABASE=` will need to be set to the database you are accessing with in the mysql system
 
 ```
 DB_HOST=127.0.0.1
