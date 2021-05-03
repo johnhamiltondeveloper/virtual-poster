@@ -6,18 +6,27 @@ tools local
 - MySQL Community (Used for local testing of the database)
 
 ## backend
+setup
 
+- make sure to install nodejs (https://nodejs.org)
+
+### How to start the server
 In the commandline go to the backend folder 
 
 start server ```node app.js```
 
 ### Setting up datebase
+For local development you can use mySQL workbench as a sql server - https://www.mysql.com/products/workbench/
 
 The SQL schema can be found in `./virtual-poster/MySQL/database_schema.sql` this is the SQL code that can be used to setup the mysql schema
 
-> importent
+**importent** The mysql database system will have to be in **legacy authentication mode**
 
-The mysql database system will have to be in legacy authentication mode.
+how to change mysql workbench to legacy authentication mode
+
+- executing the mysql install file
+- select "Reconfigure" over the mysql server
+- In Authentication Method tab, select "Use Legacy Authentication Method"
 
 
 With in backend folder you need to change the given value below found in the `.env` file to ones used by your mysql database. 
