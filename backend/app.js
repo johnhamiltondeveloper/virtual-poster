@@ -37,29 +37,17 @@ connection.connect(function(err) {
   console.log('You are now connected with mysql database...')
 })
 
-// This is just used for testing perposes ###### Remove
-app.get('/r', (req, res) => {
-
-  res.sendfile("register.html");
-});
-
-app.get('/l', (req, res) => {
-
-  res.sendfile("login.html");
-});
-
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
-// Password managment
+// Create User
 const bcrypt = require('bcrypt');
 const { json, response } = require('express');
 const e = require('express');
 
-app.post('/register', async (req, res) => {
+app.post('/auth/register', async (req, res) => {
 
-  req.session.loggedin = true;
 
   try {
     const salt = await bcrypt.genSalt()
@@ -69,7 +57,7 @@ app.post('/register', async (req, res) => {
 
     const email = req.body.email
 
-    connection.query("INSERT INTO users (email,password) VALUES (?,?)",[connection.escape(email),connection.escape(hashedPassword)], function (err, results, fields) {
+    connection.query("INSERT INTO users (email,password) VALUES (" + connection.escape(email) + "," + connection.escape(hashedPassword) + ")", function (err, results, fields) {
       if (err) throw err;
     });
 
@@ -83,7 +71,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Logout
-app.get('/logout',(req, res) => {
+app.post('/auth/logout',(req, res) => {
 
   var hasCookie = ('key' in req.cookies)
 
@@ -109,7 +97,7 @@ app.get('/logout',(req, res) => {
 })
 
 // login api request
-app.post('/login', async (req, res) => {
+app.post('/auth/login', async (req, res) => {
 
   try {
     const salt = await bcrypt.genSalt()
@@ -142,7 +130,7 @@ app.post('/login', async (req, res) => {
                 if (error) throw error;
 
                 res.cookie('key', user_token, {expire: 360000 + Date.now()});
-                res.status(202).send() 
+                res.status(202).json({email: 'good',password: 'good'})
               });
 
               
@@ -155,13 +143,17 @@ app.post('/login', async (req, res) => {
           else {
 
             console.log("Wrong password")
-            res.status(401).send()
+            res.status(401).json({email: 'good',password: 'bad'})
           }
         });
 
       }
-      else {
-        // if the sql returns more then 1 user with the same email there is an error
+      
+      if(results.length == 0) {
+        res.status(401).json({email: 'bad',password: 'bad'})
+      }
+
+      if(results.length > 1) {
         res.status(500).send()
       }
 

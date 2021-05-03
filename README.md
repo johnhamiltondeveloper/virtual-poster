@@ -57,3 +57,35 @@ https://angular.io/start/start-deployment
     - Angular Language Service (visual studio code addon)
     - Angular Files (visual studio code addon)
 - github desktop https://desktop.github.com/
+
+# API ref
+
+## authentication
+
+### Login
+
+####request
+
+```
+POST http://domainName/auth/login
+
+{
+    "email": "data",
+    "password": "data"
+}
+
+```
+
+#### Response
+return type json
+
+- if the password is wrong will return `password: bad` but if the password is ok it will return `password: good`
+- if there is no user with that email it will return `email: bad` but if there is an email it will return `email: good`
+
+example of reponse where the user logs in.
+```
+{
+  "email": "good",
+  "password": "good"
+}
+```
