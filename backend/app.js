@@ -48,8 +48,6 @@ const e = require('express');
 
 app.post('/auth/register', async (req, res) => {
 
-  console.log("start")
-
   try {
     const salt = await bcrypt.genSalt()
     const hashedPassword = await bcrypt.hash(req.body.password,salt)

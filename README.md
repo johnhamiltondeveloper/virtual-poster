@@ -107,13 +107,42 @@ content-type: application/json
 #### Response
 return type json
 
-if `"email": "bad"` no email in use, but if `"email": "good"` then its fine to use that email
-if `"user_created": "no"` then no user was created, but if `"user_created": "yes"` then user has been created
+- if `"email": "bad"` then the email is in use, but if `"email": "good"` then the email is not been used and can be used
+- if `"user_created": "no"` then no user was created, but if `"user_created": "yes"` then user has been created
 
 An Example of json response where email is in use.
 ```
 {
   "email": "bad",
   "user_created": "no"
+}
+```
+
+### logout
+API endpoint for logining the user out
+
+#### Request
+http Request to logout
+
+```
+post http://domainName/auth/logout
+```
+
+#### Response
+if user loged out `"logout": "good"` but if there is no user to logout `"logout": "good"` is returned
+
+successful logout Response json body
+
+```
+{
+  "logout": "good"
+}
+```
+
+user already logedout Response json body
+
+```
+{
+  "logout": "no-login"
 }
 ```
