@@ -82,10 +82,38 @@ return type json
 - if the password is wrong will return `password: bad` but if the password is ok it will return `password: good`
 - if there is no user with that email it will return `email: bad` but if there is an email it will return `email: good`
 
-example of reponse where the user logs in.
+example of reponse json body where the user logs in.
 ```
 {
   "email": "good",
   "password": "good"
+}
+```
+### Register
+
+#### Request
+http Request to create user
+
+```
+post http://domainName/auth/register
+content-type: application/json
+
+{
+    "email": "admin1",
+    "password": "admin"
+}
+```
+
+#### Response
+return type json
+
+if `"email": "bad"` no email in use, but if `"email": "good"` then its fine to use that email
+if `"user_created": "no"` then no user was created, but if `"user_created": "yes"` then user has been created
+
+An Example of json response where email is in use.
+```
+{
+  "email": "bad",
+  "user_created": "no"
 }
 ```

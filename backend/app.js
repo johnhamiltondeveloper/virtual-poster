@@ -48,24 +48,34 @@ const e = require('express');
 
 app.post('/auth/register', async (req, res) => {
 
+  console.log("start")
 
   try {
     const salt = await bcrypt.genSalt()
     const hashedPassword = await bcrypt.hash(req.body.password,salt)
-    console.log(salt)
-    console.log(hashedPassword)
 
     const email = req.body.email
 
-    connection.query("INSERT INTO users (email,password) VALUES (" + connection.escape(email) + "," + connection.escape(hashedPassword) + ")", function (err, results, fields) {
+    connection.query("select * from users WHERE email = " + connection.escape(req.body.email), function (err, results, fields) {
       if (err) throw err;
-    });
 
-    res.status(201).send()
+        if(results.length === 0){
+
+          connection.query("INSERT INTO users (email,password) VALUES (" + connection.escape(email) + "," + connection.escape(hashedPassword) + ")", function (err, results, fields) {
+            if (err) throw err;
+          });
+
+          res.status(202).json({email: 'good',user_created: 'yes'})
+        }
+        else {
+          res.status(403).json({email: 'bad',user_created: 'no'})
+        }
+      
+    })
+
   }
   catch {
-    console.log("error password not working")
-    res.status(500).send()
+    res.status(500).json({email: 'unknown',user_created: 'no'})
   }
   
 });
@@ -83,15 +93,16 @@ app.post('/auth/logout',(req, res) => {
         if (err) throw err;
 
         res.clearCookie('key');
-        res.send('Done')
+        res.status(202).json({logout: 'good'})
       })
       
     } 
     catch (error) { 
+      res.status(500).json({logout: 'bad'})
     }
   }
   else {
-    res.send('No need')
+    res.status(200).json({logout: 'no-login'})
   }
 
 })
