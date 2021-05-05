@@ -1,4 +1,4 @@
-GET http://localhost:3000/customer
+GET http://localhost:3000/private
 
 ###
 
@@ -20,6 +20,6 @@ post http://localhost:3000/auth/register
 content-type: application/json
 
 {
-    "email": "admin",
+    "email": "admin2",
     "password": "admin"
 }
