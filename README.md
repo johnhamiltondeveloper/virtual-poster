@@ -16,6 +16,8 @@ In the commandline go to the backend folder
 start server ```node app.js```
 
 ### Setting up datebase
+[](./GRD_V4.png)
+
 For local development you can use mySQL workbench as a sql server - https://www.mysql.com/products/workbench - (v8.0.22)
 
 The SQL schema can be found in `./virtual-poster/MySQL/database_schema.sql` this is the SQL code that can be used to setup the mysql schema
