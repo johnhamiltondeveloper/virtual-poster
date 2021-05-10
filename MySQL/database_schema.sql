@@ -10,7 +10,7 @@ CREATE TABLE `animation` (
 
 CREATE TABLE `attendees` (
   `UserID` int NOT NULL,
-  `EventID` int NOT NULL,
+  `EventID` varchar(100) NOT NULL,
   PRIMARY KEY (`UserID`,`EventID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -32,7 +32,7 @@ CREATE TABLE `presentation` (
 
 CREATE TABLE `presentationowner` (
   `OwnerID` int NOT NULL AUTO_INCREMENT,
-  `EventID` int DEFAULT NULL,
+  `EventID` varchar(100) DEFAULT NULL,
   `UserID` int DEFAULT NULL,
   `PresentationID` int DEFAULT NULL,
   PRIMARY KEY (`OwnerID`)
