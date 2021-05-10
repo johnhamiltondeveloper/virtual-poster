@@ -23,3 +23,21 @@ content-type: application/json
     "email": "admin2",
     "password": "admin"
 }
+
+### Create confernce
+
+post http://localhost:3000/conference/create
+content-type: application/json
+
+{
+    "name": "why making softwere is hard"
+}
+
+### Update confernce
+
+post http://localhost:3000/conference/update
+
+{
+    "name": "Updated name of project",
+    "conferenceID": "457277d0-cb1e-463f-b03d-25017a33e554"
+}

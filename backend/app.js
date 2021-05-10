@@ -204,8 +204,11 @@ var auth = async function(req, res, next) {
 
   // this chacks if the token is valid
   const tokenCheck = async function() {
+
     connection.query("select * from users WHERE access_token= " + connection.escape(req.cookies.key), function (err, results, fields) {
       if(results.length == 1){
+        // inserts the userID into the request so it can be used by auth pages
+        req.userID = results[0].UserID
         passedAuth()
       }
       else {
@@ -232,6 +235,81 @@ var auth = async function(req, res, next) {
 
 }
 
+
+// login test area
 app.get('/private', auth ,function (req, res) {
   res.send("welcome to a private page")
+});
+
+app.post('/conference/create',auth,function (req, res) {
+
+  // Creates a Random confernce ID
+  var conferenceID = uuid.v4()
+
+  // Is there a name feild in the body of the http req
+  if('name' in req.body) {
+
+    // Create a SQL query to create a new event object in the database
+    let query = "INSERT INTO event (EventID,name,EventOwner) VALUES ('" + conferenceID + "'," + connection.escape(req.body.name) + "," + connection.escape(req.userID) + ")"
+    try {
+      connection.query(query, function (error, results, fields) { 
+        if (error) throw error;
+
+        // returns that the conference was created
+        res.status(202).json({create: 'good', conferenceID: conferenceID})
+
+      });
+
+      
+    } catch (error) {
+      // returns if there is an error with the sql query
+      // this may happen if uuid is the same as one that is already in the system, this is very very unlicky to happen
+      res.status(500).json({created: 'bad'}) 
+    }
+
+  }
+  else {
+    // if the client has not provided the need feild
+    res.status(400).json({created: 'bad'})
+  }
+
+});
+
+app.post('/conference/update',function (req, res) {
+
+  if('conferenceID' in req.body && 'name' in req.body) {
+
+    // Create a SQL query to create a new event object in the database
+    let query = "UPDATE event SET name = " + connection.escape(req.body.name) + "WHERE EventID = '" + req.body.conferenceID + "'"
+    try {
+      connection.query(query, function (error, results, fields) { 
+        if (error) throw error;
+
+        if(results.length === 0) {
+          res.status(202).json({updated: 'no',exists: 'no', conferenceID: req.body.conferenceID})
+        }
+        else{
+          // returns that the conference was created
+          res.status(202).json({updated: 'good',exists: 'yes', conferenceID: req.body.conferenceID})
+        }
+
+      });
+
+      
+    } catch (error) {
+      // returns if there is an error with the sql query
+      // this may happen if uuid is the same as one that is already in the system, this is very very unlicky to happen
+      res.status(500).json({updated: 'bad'}) 
+    }
+
+  }
+  else {
+    // if the client has not provided the need feild
+    res.status(400).json({updated: 'bad'})
+  }
+
+});
+
+app.post('/conference/remove',function (req, res) {
+  res.send("delating conference")
 });

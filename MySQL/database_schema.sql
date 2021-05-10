@@ -15,7 +15,7 @@ CREATE TABLE `attendees` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `event` (
-  `EventID` int NOT NULL AUTO_INCREMENT,
+  `EventID` varchar(100) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `EventOwner` int DEFAULT NULL,
   PRIMARY KEY (`EventID`)
