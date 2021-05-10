@@ -311,5 +311,117 @@ app.post('/conference/update',function (req, res) {
 });
 
 app.post('/conference/remove',function (req, res) {
-  res.send("delating conference")
+
+    if('conferenceID' in req.body) {
+  
+      // Create a SQL query to create a new event object in the database
+      let query = "DELETE FROM event WHERE EventID = " + connection.escape(req.body.conferenceID)
+      try {
+        connection.query(query, function (error, results, fields) { 
+          if (error) throw error;
+  
+          res.status(202).json({removed: 'good', conferenceID: req.body.conferenceID})
+  
+        });
+  
+        
+      } catch (error) {
+        // returns if there is an error with the sql query
+        // this may happen if uuid is the same as one that is already in the system, this is very very unlicky to happen
+        res.status(500).json({removed: 'bad', conferenceID: req.body.conferenceID})
+      }
+  
+    }
+    else {
+      // if the client has not provided the need feild
+      res.status(400).json({removed: 'bad', conferenceID: req.body.conferenceID})
+    }
+
+});
+
+app.post('/conference/data',function (req, res) {
+
+  if('conferenceID' in req.body) {
+
+    // Create a SQL query to create a new event object in the database
+    let query = "SELECT * FROM event WHERE EventID = " + connection.escape(req.body.conferenceID)
+    try {
+      connection.query(query, function (error, results, fields) { 
+        if (error) throw error;
+
+        if(results.length === 1) {
+          res.status(202).json({results: 'yes',data: {name: results[0].name}, conferenceID: req.body.conferenceID})
+        }
+        else{
+          // returns that the conference was created
+          res.status(202).json({results: 'no', conferenceID: req.body.conferenceID})
+        }
+
+      });
+
+      
+    } catch (error) {
+      // returns if there is an error with the sql query
+      // this may happen if uuid is the same as one that is already in the system, this is very very unlicky to happen
+      res.status(500).json({results: 'no'}) 
+    }
+
+  }
+  else {
+    // if the client has not provided the need feild
+    res.status(400).json({results: 'bad'})
+  }
+
+});
+
+// addeds a user to a list
+app.post('/conference/attendees/add', async function (req, res) {
+  if('users' in req.body && 'conferenceID' in req.body) {
+
+    let unsuccessful = []
+    let successful = []
+
+    for(var i = 0; i < req.body.users.length; i++) {
+      
+      try {
+
+        let query = "INSERT INTO attendees (UserID,EventID) VALUES (" + connection.escape(req.body.users[i]) + "," + connection.escape(req.body.conferenceID) + ")"
+      
+        connection.query(query, function (error, results, fields) { 
+
+          if(error != null){
+            if(error.code==='ER_DUP_ENTRY') {
+              //fine keep going
+              //unsuccessful.push(req.body.users[i])
+            }
+            else {
+              // an error other then dup entry throw error
+              console.log(error)
+            }
+          }
+        });
+        
+      } catch (error) {
+        
+      }
+
+    }
+
+    res.status(202).json({done: 'yes'})
+
+  }
+});
+
+// remove user from the attendees at a event
+app.post('/conference/attendees/remove',function (req, res) {
+
+});
+
+// gets a list of attendees at an event
+app.post('/conference/attendees',function (req, res) {
+
+});
+
+// gets a list of confernces that the user has access too.
+app.post('/user/conferences',function (req, res) {
 });

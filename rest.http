@@ -36,8 +36,35 @@ content-type: application/json
 ### Update confernce
 
 post http://localhost:3000/conference/update
+content-type: application/json
 
 {
     "name": "Updated name of project",
-    "conferenceID": "457277d0-cb1e-463f-b03d-25017a33e554"
+    "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
+}
+
+### Get conference data
+
+post http://localhost:3000/conference/data
+content-type: application/json
+
+{
+    "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
+}
+
+### remove data
+post http://localhost:3000/conference/remove
+content-type: application/json
+
+{
+    "conferenceID": "a4eb123d-1c44-454a-a287-f4a3c689740"
+}
+
+### add attendess
+post http://localhost:3000/conference/attendees/add
+content-type: application/json
+
+{
+    "users": [27,29],
+    "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
 }
