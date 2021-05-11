@@ -418,10 +418,52 @@ app.post('/conference/attendees/remove',function (req, res) {
 });
 
 // gets a list of attendees at an event
-app.post('/conference/attendees',function (req, res) {
+app.post('/conference/attendees',auth,function (req, res) {
+
+  if('conferenceID' in req.body){
+      try {
+
+        let query = "SELECT users.UserID, users.email, users.name, attendees.EventID users FROM attendees JOIN users ON attendees.UserID = users.UserID WHERE EventID = " + connection.escape(req.body.conferenceID)
+        
+          connection.query(query, function (error, results, fields) { 
+            let attendees = []
+
+            for(var i = 0; i < results.length; i++) {
+              attendees[i] = {UserID: results[i].UserID, name: results[i].name}
+            }
+
+            res.status(200).json({attendees: attendees})
+          });
+        
+      } catch (error) {
+        res.status(500).send()
+    }
+  }
+  else {
+    res.status(400).send()
+  }
 
 });
 
 // gets a list of confernces that the user has access too.
-app.post('/user/conferences',function (req, res) {
+app.post('/user/conferences',auth,function (req, res) {
+    
+    try {
+
+      let query = "SELECT * FROM attendees JOIN event ON attendees.EventID = event.EventID WHERE UserID = " + connection.escape(req.userID)
+      
+        connection.query(query, function (error, results, fields) { 
+          let events = []
+
+          for(var i = 0; i < results.length; i++) {
+            events[i] = {EventID: results[i].EventID, name: results[i].name}
+          }
+
+          res.status(200).json({events: events})
+        });
+      
+    } catch (error) {
+      res.status(500).send()
+    }
+
 });

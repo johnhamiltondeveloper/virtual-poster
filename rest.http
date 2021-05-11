@@ -66,5 +66,16 @@ content-type: application/json
 
 {
     "users": [27,29],
+    "conferenceID": "ca0d7c22-768b-49db-8250-lkjafsdlfj"
+}
+
+### get conferncess for user
+post http://localhost:3000/user/conferences
+
+### get attendees
+post http://localhost:3000/conference/attendees
+content-type: application/json
+
+{
     "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
 }
