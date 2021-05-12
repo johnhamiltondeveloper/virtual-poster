@@ -65,8 +65,17 @@ post http://localhost:3000/conference/attendees/add
 content-type: application/json
 
 {
-    "users": [27,29],
-    "conferenceID": "ca0d7c22-768b-49db-8250-lkjafsdlfj"
+    "users": [27,29,30],
+    "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
+}
+
+### remove attendess
+post http://localhost:3000/conference/attendees/remove
+content-type: application/json
+
+{
+    "users": [27,29,30],
+    "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
 }
 
 ### get conferncess for user

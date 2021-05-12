@@ -414,6 +414,29 @@ app.post('/conference/attendees/add', async function (req, res) {
 
 // remove user from the attendees at a event
 app.post('/conference/attendees/remove',function (req, res) {
+  if('users' in req.body && 'conferenceID' in req.body) {
+
+    let unsuccessful = []
+    let successful = []
+
+    for(var i = 0; i < req.body.users.length; i++) {
+      
+      try {
+
+        let query = "DELETE FROM attendees WHERE UserID =" + connection.escape(req.body.users[i]) + " AND EventID =" + connection.escape(req.body.conferenceID)
+      
+        connection.query(query, function (error, results, fields) { 
+
+        });
+        
+      } catch (error) {
+        console.log(error)
+      }
+
+    }
+    
+    res.status(202).json({done: 'yes'})
+  }
 
 });
 
