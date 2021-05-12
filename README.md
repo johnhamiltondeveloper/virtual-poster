@@ -6,16 +6,19 @@ tools local
 - MySQL Community (v8.0.22) - Used for local testing of the database
 
 ## backend
+
 setup
 
 - make sure to install nodejs (https://nodejs.org)
 
 ### How to start the server
+
 In the commandline go to the backend folder 
 
 start server ```node app.js```
 
 ### Setting up datebase
+
 ![](GRD_V4.png)
 
 For local development you can use mySQL workbench as a sql server - https://www.mysql.com/products/workbench - (v8.0.22)
@@ -29,7 +32,6 @@ how to change mysql workbench to legacy authentication mode
 - executing the mysql install file
 - select "Reconfigure" over the mysql server
 - In Authentication Method tab, select "Use Legacy Authentication Method"
-
 
 With in backend folder you need to change the given value below found in the `.env` file to ones used by your mysql database. 
 
@@ -60,25 +62,28 @@ POST http://domainName/auth/login
     "email": "data",
     "password": "data"
 }
-
 ```
 
 #### Response
+
 return type json
 
 - if the password is wrong will return `password: bad` but if the password is ok it will return `password: good`
 - if there is no user with that email it will return `email: bad` but if there is an email it will return `email: good`
 
 example of reponse json body where the user logs in.
+
 ```
 {
   "email": "good",
   "password": "good"
 }
 ```
+
 ### Register
 
 #### Request
+
 http Request to create user
 
 ```
@@ -92,12 +97,14 @@ content-type: application/json
 ```
 
 #### Response
+
 return type json
 
 - if `"email": "bad"` then the email is in use, but if `"email": "good"` then the email is not been used and can be used
 - if `"user_created": "no"` then no user was created, but if `"user_created": "yes"` then user has been created
 
 An Example of json response where email is in use.
+
 ```
 {
   "email": "bad",
@@ -106,9 +113,11 @@ An Example of json response where email is in use.
 ```
 
 ### logout
+
 API endpoint for logining the user out
 
 #### Request
+
 http Request to logout
 
 ```
@@ -116,6 +125,7 @@ post http://domainName/auth/logout
 ```
 
 #### Response
+
 if user loged out `"logout": "good"` but if there is no user to logout `"logout": "good"` is returned
 
 successful logout Response json body
@@ -131,5 +141,65 @@ user already logedout Response json body
 ```
 {
   "logout": "no-login"
+}
+```
+
+### Create Conference
+
+#### request
+
+```
+post http://localhost:3000/conference/create
+content-type: application/json
+
+{
+    "name": "name of event"
+}
+```
+
+#### Response
+
+Returns if the conference was created `"create": "good"` if there is an error with creating the conference then will return `{created: 'bad'}` 
+
+Will return the ID of the new conference like this `"conferenceID": "5a3c5c6d-fde5-44f5-a9c5-8d85cf563d0`
+
+```
+{
+  "create": "good",
+  "conferenceID": "5a3c5c6d-fde5-44f5-a9c5-8d85cf563d0c"
+}
+```
+
+### Update Conference
+
+#### Request
+
+- `name: name` should be the new name you want to update the conference with
+
+- `conferenceID: id` should be the id of the conference you want to update 
+
+```
+post http://localhost:3000/conference/update
+content-type: application/json
+
+{
+    "name": "new name",
+    "conferenceID": "the id of the confernce"
+}
+```
+
+#### Response
+
+- `updated: value` **good** means it was updated, **no** means it did not update, **bad** means there is an error
+
+- `exists: value`  **yes** means there was a value to update, **no** means there is no values updated
+
+- `conferenceID: id` just returns the id of the conference that was updated
+
+```
+{
+  "updated": "good",
+  "exists": "yes",
+  "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
 }
 ```
