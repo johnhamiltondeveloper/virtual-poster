@@ -8,8 +8,14 @@ const port = 3000;
 // ########################
 // This allows cors from anywhere ##### This may be a security problem needs more research
 var cors = require('cors');
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
 //#########################
+
+app.get('/test', (req, res) => {
+  res.sendfile('register.html');
+});
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -25,7 +31,11 @@ var uuid = require('uuid');
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 1000
+  }
 }))
 
 // MySQL Connection
