@@ -5,6 +5,12 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+// ########################
+// This allows cors from anywhere ##### This may be a security problem needs more research
+var cors = require('cors');
+app.use(cors())
+//#########################
+
 app.use(express.json());
 app.use(express.urlencoded());
 

@@ -1,18 +1,11 @@
 <html>
   <head>
     <title>Simple login</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
     <script>
       $(document).ready(function(){
         var user,pass;
         $("#submit").click(function(){
-          email=$("#email").val();
-          pass=$("#password").val();
-          $.post("http://localhost:3000/login",{email: email,password: pass}, function(data){
-            if(data === 'yes') {
-                alert("login success");
-              }
-          });
+          console.log("welcome")
         });
       });
     </script>

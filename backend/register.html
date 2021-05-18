@@ -1,26 +1,40 @@
 <html>
   <head>
     <title>Simple login</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+
     <script>
-      $(document).ready(function(){
-        var user,pass;
-        $("#submit").click(function(){
-          email=$("#email").val();
-          pass=$("#password").val();
-          $.post("http://localhost:3000/register",{email: email,password: pass}, function(data){
-            if(data === 'yes') {
-                alert("login success");
-              }
-          });
-        });
-      });
+
+      let resURL = "http://localhost:3000/auth/login";
+
+      const xhr = new XMLHttpRequest();
+
+      const json_data = {
+          password: 'admin',
+          email: 'admin',
+      };
+
+      function createUser() {
+        xhr.open('POST', resURL);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(json_data));
+      }
+
+      xhr.onload = () => {
+        const data = xhr.response;
+        console.log(data);
+      };
+
+      xhr.onerror = () => {
+        console.log("Request failed!");
+      };
+
     </script>
+
   </head>
   <body>
     <h1>Hello people !</h1>
     <input type="TEXT" id="email" size="40"><br>
     <input type="password" id="password" size="40"><br>
-    <input type="button" id="submit" value="Submit">
+    <button type="button" onclick="createUser()">Test</button>
   </body>
 </html>
