@@ -17,6 +17,12 @@ In the commandline go to the backend folder
 
 start server ```node app.js```
 
+
+
+### Setting up backend and frontend connection
+
+With in the backend folder you need to change the `BACKEND_DOMAIN=http://localhost:3300` to the address and port of you frontend server to allow the backend to communicate with the frontend or else you will get a cors error.
+
 ### Setting up datebase
 
 ![](GRD_V4.png)

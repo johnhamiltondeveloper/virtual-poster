@@ -5,17 +5,13 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-// ########################
-// This allows cors from anywhere ##### This may be a security problem needs more research
+
+// allows the frontend be able to accees the backend from a differnt domain/prot then the backend one
 var cors = require('cors');
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: process.env.FRONTEND_DOMAIN,
+  credentials: true
 }));
-//#########################
-
-app.get('/test', (req, res) => {
-  res.sendfile('register.html');
-});
 
 app.use(express.json());
 app.use(express.urlencoded());
