@@ -209,3 +209,62 @@ content-type: application/json
   "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
 }
 ```
+
+### Remove Conference
+
+#### Request
+
+- `conferenceID: id` allows the system to know what conference to remove
+
+```
+post http://localhost:3000/conference/remove
+content-type: application/json
+
+{
+    "conferenceID": "a4eb123d-1c44-454a-a287-f4a3c689740"
+}
+```
+
+#### Response
+
+- `removed: value` **good** means the conference was removed, **bad** means there is an error
+
+- `conferenceID: value`  just returns the conferenceID 
+
+```
+{
+"removed": "bad", 
+"conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
+}
+```
+
+### Get Conference
+
+#### Request
+
+- `conferenceID: id` allows the system to know what conference to return data for.
+
+```
+post http://localhost:3000/conference/data
+content-type: application/json
+
+{
+    "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
+}
+```
+
+#### Response
+
+- `results: value` **yes** means the conference was found, **bad** means there is an error and **no** means there is no conference with that id.
+
+- `data: value` stores an object with all the data of the conference
+
+- `conferenceID: value` is just the id of the conference
+
+```
+{
+"results": "yes",
+"data": {"name": "name of confernce"}, 
+"conferenceID": "ca0d7c22-768b-49db-8250-321e12e1"
+}
+```
