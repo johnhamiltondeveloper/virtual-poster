@@ -52,7 +52,7 @@ content-type: application/json
     "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
 }
 
-### remove data
+### remove confernce
 post http://localhost:3000/conference/remove
 content-type: application/json
 

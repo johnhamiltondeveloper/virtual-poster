@@ -17,8 +17,6 @@ In the commandline go to the backend folder
 
 start server ```node app.js```
 
-
-
 ### Setting up backend and frontend connection
 
 With in the backend folder you need to change the `BACKEND_DOMAIN=http://localhost:3300` to the address and port of you frontend server to allow the backend to communicate with the frontend or else you will get a cors error.
@@ -266,5 +264,127 @@ content-type: application/json
 "results": "yes",
 "data": {"name": "name of confernce"}, 
 "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1"
+}
+```
+
+### add attendees
+
+#### Request
+
+- `conferenceID: id` allows the system to know what conference to added the attendees too
+- `users:[]` is an array of user ids you want to added
+
+```
+post http://localhost:3000/conference/attendees/add
+content-type: application/json
+
+{
+    "users": [27,29,30],
+    "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
+}
+```
+
+#### Response
+
+- `"done: value` **yes** means the attendees where added, **no** means that they where not added.
+
+```
+{
+  "done": "yes"
+}
+```
+
+### remove attendees
+
+#### Request
+
+- `conferenceID: id` allows the system to know what conference to remove the attendees from
+- `users:[]` is an array of user ids you want to remove.
+
+```
+post http://localhost:3000/conference/attendees/add
+content-type: application/json
+
+{
+    "users": [27,29,30],
+    "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
+}
+```
+
+#### Response
+
+- `"done: value` **yes** means the attendees where removed, **no** means that they where not removed.
+
+```
+{
+  "done": "yes"
+}
+```
+
+### Get attendees
+
+#### Request
+
+`ConferenceID: value` is the value that is given to tell the system what conference to get the list attendees from.
+
+```
+post http://localhost:3000/conference/attendees
+content-type: application/json
+
+{
+    "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
+}
+```
+
+#### Response
+
+- `attendees: []` is an array of objects that include the attendees `UserID` and `name`
+
+```
+{
+  "attendees": [
+    {
+      "UserID": 27,
+      "name": null
+    },
+    {
+      "UserID": 29,
+      "name": null
+    },
+    {
+      "UserID": 30,
+      "name": null
+    }
+  ]
+}
+```
+
+### Get conferences from users
+
+#### Request
+
+user must be logged in or else will return `401 unauthorized`
+
+```
+post http://localhost:3000/user/conferences
+```
+
+#### Response
+
+- `events: []` is an array of objects that include the conferences `EventID` and `name` for all the conferences the user has access too.
+
+```
+
+{
+  "events": [
+    {
+      "EventID": "ca0d7c22-768b-49db-8250-321e12e1754d",
+      "name": "Updated name of project"
+    },
+    {
+      "EventID": "ca0d7c22-768b-49db-8250-ldjflasjfl",
+      "name": "Welcome to blender"
+    }
+  ]
 }
 ```
