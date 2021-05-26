@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="row" style="margin-top: 50px">
+    <div class="col-md-6 offset-md-3 col-sm-8 offset-sm-2">
+      <div class="card">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="text-center">Create account</h5>
+        </div>
+        <div class="card-body pt-md-5 pr-md-4 pl-md-4">
+          <form [formGroup]="registerForm" (ngSubmit)="onCreateUser()">
+            <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="fname"><strong>First name</strong></label>
+                  <input type="text" id="fname" name="first_name" formControlName="first_name" class="form-control form-control-lg" placeholder="First name"/>
+                  <small *ngIf="!fname.valid && fname.touched" class="text-danger">Please enter First name!</small>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="lname"><strong>Last name</strong></label>
+                  <input type="text" id="lname" name="last_name" formControlName="last_name" class="form-control form-control-lg" placeholder="Last name"/>
+                  <small *ngIf="!lname.valid && lname.touched" class="text-danger">Please enter Last name!</small>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email"><strong>Email</strong></label>
+              <input type="email" id="email" name="email" formControlName="email" class="form-control form-control-lg" placeholder="email"/>
+              <small *ngIf="!email.valid && email.touched" class="text-danger">Please enter a Valid email!</small>
+            </div>
+            <div class="form-group">
+              <label for="password"><strong>Password</strong></label>
+              <input type="password" id="password" name="password"  formControlName="password" class="form-control form-control-lg" placeholder="password"/>
+              <small *ngIf="!password.valid && password.touched" class="text-danger">Please enter password!</small>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary btn-block" [disabled]="registerForm.invalid">Continue</button>
+            </div>
+            <p class="text-center">Already have an account? <a routerLink="login">Sign in</a></p>
+            <p class="text-center"><a href="">Forgot Password</a></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
