@@ -223,6 +223,7 @@ var auth = async function(req, res, next) {
       if(results.length == 1){
         // inserts the userID into the request so it can be used by auth pages
         req.userID = results[0].UserID
+        req.user_level = results[0].user_level
         passedAuth()
       }
       else {
@@ -249,6 +250,9 @@ var auth = async function(req, res, next) {
 
 }
 
+app.post('/auth/level',auth,function (req, res) {
+  res.status(200).json({user_level: req.user_level})
+});
 
 // login test area
 app.get('/private', auth ,function (req, res) {
@@ -503,4 +507,9 @@ app.post('/user/conferences',auth,function (req, res) {
       res.status(500).send()
     }
 
+});
+
+app.get('/presentation/poster/upload', (req, res) => {
+  console.log(req)
+  res.status(200).send()
 });

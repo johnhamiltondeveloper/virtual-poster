@@ -88,3 +88,13 @@ content-type: application/json
 {
     "conferenceID": "ca0d7c22-768b-49db-8250-321e12e1754d"
 }
+
+### gets user id levels
+post http://localhost:3000/auth/level
+
+
+### media upload
+post http://localhost:3000/presentation/poster/upload
+content-type: media-type
+
+./poster_upload_test.pdf
