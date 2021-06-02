@@ -1,17 +1,52 @@
+# Deployment
+
+Has not been tested on a real production environment
+
+
+
+A mysql server will need to be setup on the server and the info change on the .env backend file to what the mysql database needs.
+
+the development environment section talks about how the database needs to be setup but it will need to use a database server that works with the server type e.g. unix or windows
+
+## outstanding deployment problems
+
+1. API address are hardcoded into the frontend like `http://localhost:3000/auth/login`  
+   
+   They will need to be set to the server address they are found in `auth.service.ts` it maybe better in the future to make this reference a config file.
+   
+    
+
 # Development Environment
 
-tools local
+You must run the backend and the frontend systems together
+
+
+
+Tools local
 
 - nodejs (v14.16.0)
 - MySQL Community (v8.0.22) - Used for local testing of the database
+- angular command-line interface
 
-## backend
+## Frontend
+
+You will need to install angular command-line interface tool on your system
+
+`npm install -g @angular/cli`
+
+### How to start frontend server
+
+open backend folder in command line.
+
+Run `ng serve`
+
+## Backend
 
 setup
 
 - make sure to install nodejs (https://nodejs.org)
 
-### How to start the server
+### How to start the backend server
 
 In the commandline go to the backend folder 
 
@@ -19,23 +54,35 @@ start server ```node app.js```
 
 ### Setting up backend and frontend connection
 
-With in the backend folder you need to change the `BACKEND_DOMAIN=http://localhost:3300` to the address and port of you frontend server to allow the backend to communicate with the frontend or else you will get a cors error.
+With in the backend folder you need to change the value in the .env file of `BACKEND_DOMAIN=http://localhost:3300` to the address and port of you frontend server to allow the backend to communicate with the frontend or else you will get a CORS error.
 
-### Setting up datebase
+### Setting up database
 
 ![](GRD_V4.png)
 
 For local development you can use mySQL workbench as a sql server - https://www.mysql.com/products/workbench - (v8.0.22)
 
-The SQL schema can be found in `./virtual-poster/MySQL/database_schema.sql` this is the SQL code that can be used to setup the mysql schema
 
-**importent** The mysql database system will have to be in **legacy authentication mode**
+
+The SQL code for creating the schema is at `./virtual-poster/MySQL/database_schema.sql` 
+
+within a mysql workbench server create a schema when you have the schema object created and selected copy this code into a workbench code window and run it this will create all the tables needed
+
+> note that this database schema code is only the code to create the tables you will need to create a schema object with in the sql system
+
+
+
+**important** The mysql database system will have to be in **legacy authentication mode**
+
+
 
 how to change mysql workbench to legacy authentication mode
 
 - executing the mysql install file
 - select "Reconfigure" over the mysql server
 - In Authentication Method tab, select "Use Legacy Authentication Method"
+
+
 
 With in backend folder you need to change the given value below found in the `.env` file to ones used by your mysql database. 
 
@@ -374,7 +421,6 @@ post http://localhost:3000/user/conferences
 - `events: []` is an array of objects that include the conferences `EventID` and `name` for all the conferences the user has access too.
 
 ```
-
 {
   "events": [
     {
