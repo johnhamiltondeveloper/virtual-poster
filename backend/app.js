@@ -59,8 +59,6 @@ const { json, response } = require('express');
 const e = require('express');
 
 app.post('/auth/register', async (req, res) => {
-	
-	console.log("test");
 
   try {
     // encripts password 1 way hash
