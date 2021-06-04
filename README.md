@@ -1,3 +1,7 @@
+Works best on windows.
+
+if on mac you may have to reinstall some mpm modules to work with the unix type system this may happen with a linex server too.
+
 # Deployment
 
 Has not been tested on a real production environment
